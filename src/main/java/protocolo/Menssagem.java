@@ -14,9 +14,9 @@ import java.io.Serializable;
 
 public class Menssagem implements Serializable {
     
-    private String remetente;
-    private int operacao;
-    private byte[] args;
+    private String remetente; // indica quem está enviando a menssagem
+    private int operacao;     // operacao a ser executada no servidor
+    private byte[] args;      // argumentos das menssagem
 
     public Menssagem(int operacao, byte[] args) {
         this.operacao = operacao;

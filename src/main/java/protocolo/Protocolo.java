@@ -14,22 +14,45 @@ import java.net.InetAddress;
  *
  * @author alann
  */
-public class Protocolo implements ProtocoloService {
+public class Protocolo {
 
-    private static final int PORT_REQUEST = 4342;
-    private static final int PORT_RESPONSE = 4545;
+    private int portaRequisicao; // porta usada para enviar requisicao 
+    private int portaResposta;   // porta usada para receber respostas
 
-    public Protocolo() {
+    public Protocolo(int portaRequisicao, int portaResposta) {
+
+        this.portaRequisicao = portaRequisicao;
+        this.portaResposta = portaResposta;
     }
 
-    @Override
+    public int getPortaRequisicao() {
+        return portaRequisicao;
+    }
+
+    public void setPortaRequisicao(int portaRequisicao) {
+        this.portaRequisicao = portaRequisicao;
+    }
+
+    public int getPortaResposta() {
+        return portaResposta;
+    }
+
+    public void setPortaResposta(int portaResposta) {
+        this.portaResposta = portaResposta;
+    }
+
+    /*
+    Metodo usado pelo cliente para realizar uma requisicao do lado do servidor 
+    recebendo como parametro o destino e a menssagem a ser enviada.
+    */
     public Menssagem doOperation(String destino, Menssagem args) {
 
         try {
+
             String remetente = InetAddress.getLocalHost().getHostAddress();
             args.setRemetente(remetente);
 
-            RemoteRef rr = new RemoteRef(destino, PORT_REQUEST);
+            RemoteRef rr = new RemoteRef(destino, portaRequisicao);
 
             InetAddress addr = InetAddress.getByName(rr.getDestino());
             int port = rr.getPorta();
@@ -38,12 +61,12 @@ public class Protocolo implements ProtocoloService {
 
             DatagramPacket pkg = new DatagramPacket(msg, msg.length, addr, port);
 
-            DatagramSocket ds = new DatagramSocket(PORT_RESPONSE);
+            DatagramSocket ds = new DatagramSocket(portaResposta);
             ds.send(pkg);
 
             DatagramPacket resposta = new DatagramPacket(new byte[1024], 1024);
             ds.receive(resposta);
-            
+
             return Convert.convertResposta(resposta.getData());
 
         } catch (IOException ex) {
@@ -51,11 +74,13 @@ public class Protocolo implements ProtocoloService {
         return null;
     }
 
-    @Override
+    /*
+    metodo utilizado pelo servidor para aguardar e receber requisições.
+    */
     public Menssagem getRequest() {
 
         try {
-            DatagramSocket ds = new DatagramSocket(PORT_REQUEST);
+            DatagramSocket ds = new DatagramSocket(portaRequisicao);
 
             byte[] msg = new byte[1024];
 
@@ -77,7 +102,10 @@ public class Protocolo implements ProtocoloService {
         return null;
     }
 
-    @Override
+    /*
+    metodo utilizado pelo servidor para apos ter tratado um requisicao, enviar
+    uma resposta para o seu devido cliente.
+    */
     public void sendReply(String destino, Menssagem resposta) {
 
         try {
@@ -85,7 +113,7 @@ public class Protocolo implements ProtocoloService {
             String remetente = InetAddress.getLocalHost().getHostAddress();
             resposta.setRemetente(remetente);
 
-            RemoteRef rr = new RemoteRef(destino, PORT_RESPONSE);
+            RemoteRef rr = new RemoteRef(destino, portaResposta);
 
             InetAddress addr = InetAddress.getByName(rr.getDestino());
             int port = rr.getPorta();

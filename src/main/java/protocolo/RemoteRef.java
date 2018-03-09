@@ -13,8 +13,8 @@ import java.io.Serializable;
  */
 public class RemoteRef implements Serializable {
     
-    private String destino;
-    private int porta;
+    private String destino; //host de destino da requisicao 
+    private int porta;      // porta do host que vai receber a requisicao 
 
     public RemoteRef( String destino, int porta) {
         this.destino = destino;

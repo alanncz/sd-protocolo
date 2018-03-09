@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import protocolo.Menssagem;
 import protocolo.Protocolo;
-import protocolo.ProtocoloService;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -19,7 +18,7 @@ public class Servidor {
 
     public static void main(String[] args) throws IOException {
         
-        ProtocoloService protocolo = new Protocolo();
+        Protocolo protocolo = new Protocolo(4040,5050);
 
         Menssagem requisicao = protocolo.getRequest();
 
@@ -30,6 +29,8 @@ public class Servidor {
             resposta = new Menssagem(0, soma(requisicao));
 
         }
+        
+        else resposta = new Menssagem(0, subtracao(requisicao));
 
         protocolo.sendReply(requisicao.getRemetente(), resposta);
 
@@ -45,6 +46,21 @@ public class Servidor {
         int soma = valor1 + valor2;
 
         String resposta = "A soma dos numeros é = " + Integer.toString(soma);
+        
+        return resposta.getBytes();
+
+    }
+    
+    public static byte[] subtracao(Menssagem requisicao) {
+        
+        ByteBuffer bff = ByteBuffer.wrap(requisicao.getArgs());
+
+        int valor1 = bff.getInt();
+        int valor2 = bff.getInt();
+
+        int diferenca = valor1 - valor2;
+
+        String resposta = "A diferenca dos numeros é = " + Integer.toString(diferenca);
         
         return resposta.getBytes();
 

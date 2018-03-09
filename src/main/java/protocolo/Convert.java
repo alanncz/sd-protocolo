@@ -18,6 +18,10 @@ import java.io.FileReader;
 
 public class Convert {
 
+    /*
+    transforma um arquivo json em um array de bytes para trafegar os dados entre
+    processos.
+    */
     private static byte[] getBytes(File file) {
         int len = (int) file.length();
         byte[] sendBuf = new byte[len];
@@ -31,6 +35,10 @@ public class Convert {
         return sendBuf;
     }
 
+    /*
+    transoforma um array de byte recebido em um arquivo json para ser lido pela 
+    aplicação.
+    */
     private static File getFile(byte[] bytes) throws FileNotFoundException, IOException {
 
         File file = new File("file.json");
@@ -41,6 +49,9 @@ public class Convert {
         return file;
     }
 
+    /*
+    transforma uma menssagem em um arquivo json 
+    */
     private static File toJson(Menssagem msg) {
 
         Gson gson = new Gson();
@@ -62,6 +73,9 @@ public class Convert {
 
     }
 
+    /*
+    transforma dados de um arquivo jason em uma objeto do timo Menssagem
+    */
     private static Menssagem jsonToObject(File file) {
 
         Gson gson = new Gson();
@@ -83,6 +97,10 @@ public class Convert {
 
     }
 
+    /*
+    metodo publico para uso do protocolo para transformar uma menssagem em um 
+    array de bytes.
+    */
     public static byte[] convertEnvio(Menssagem msg) {
 
         File file = toJson(msg);
@@ -92,6 +110,10 @@ public class Convert {
 
     }
 
+    /*
+    metodo publico para uso do protocolo para transformar um array de bytes em 
+    um objeto do tipo menssagem.
+    */
     public static Menssagem convertResposta(byte[] bytes) throws IOException {
 
         File file = getFile(bytes);

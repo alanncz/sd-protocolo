@@ -10,7 +10,6 @@ import java.net.SocketException;
 import java.nio.ByteBuffer;
 import protocolo.Menssagem;
 import protocolo.Protocolo;
-import protocolo.ProtocoloService;
 
 /**
  *
@@ -20,7 +19,7 @@ public class Cliente {
 
     public static void main(String[] args) throws SocketException, IOException {
 
-        ProtocoloService protocolo = new Protocolo();
+        Protocolo protocolo = new Protocolo(4040,5050);
         
         int valor1 = 5;
         int valor2 = 25;
@@ -32,7 +31,7 @@ public class Cliente {
         bff.putInt(valor1);
         bff.putInt(valor2);
 
-        Menssagem requisicao = new Menssagem(1, bff.array());
+        Menssagem requisicao = new Menssagem(2, bff.array());
 
         String destino = "localhost";
         
